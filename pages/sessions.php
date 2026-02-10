@@ -96,5 +96,18 @@ $sessions = $conn->query("SELECT * FROM sessions ORDER BY session_date DESC");
     <?php endwhile; ?>
 </div>
 
+<?php if ($_SESSION['user']['role'] === 'admin'): ?>
+<a href="share_screen_webrtc.php?session_id=<?php echo $row['id']; ?>" 
+   class="btn btn-outline-primary btn-sm">
+   Share Screen (Trainer)
+</a>
+<?php endif; ?>
+
+<a href="view_screen_webrtc.php?session_id=<?php echo $row['id']; ?>" 
+   class="btn btn-outline-success btn-sm">
+   View Screen (Student)
+</a>
+
+
 
 <?php echo "</div></body></html>"; ?>
