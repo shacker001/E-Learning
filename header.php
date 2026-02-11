@@ -108,7 +108,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <!-- Profile Section (we will activate this next) -->
             <div class="profile-box">
-                <img src="/online_training/uploads/profile_pics/<?php echo $_SESSION['user']['profile_pic'] ?? 'default_profile.png'; ?>"
+                <img src="/online_training/uploads/profile_pics/<?php echo $_SESSION['user']['profile_pic'] ?? 'default_profile.jpg'; ?>"
                     alt="Profile">
 
                 <div class="mt-2">
