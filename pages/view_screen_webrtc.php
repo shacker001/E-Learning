@@ -10,9 +10,14 @@ if (!isset($_SESSION['user'])) {
 $session_id = intval($_GET['session_id'] ?? 1);
 $user_id = $_SESSION['user']['id'];
 
-$stmt = $conn->prepare("INSERT INTO attendance (user_id, session_id) VALUES (?, ?)");
+// $stmt = $conn->prepare("INSERT INTO attendance (user_id, session_id) VALUES (?, ?)");
+// $stmt->bind_param("ii", $user_id, $session_id);
+// $stmt->execute();
+
+$stmt = $conn->prepare("UPDATE attendance SET last_seen = NOW() WHERE user_id=? AND session_id=?");
 $stmt->bind_param("ii", $user_id, $session_id);
 $stmt->execute();
+
 ?>
 
 
@@ -41,6 +46,13 @@ $stmt->execute();
             </div>
         </div>
     </div>
+
+    <button id="raiseHandBtn" class="btn btn-warning mt-3">
+        <i class="bi bi-hand-index-thumb"></i> Raise Hand
+    </button>
+
+    <div id="raiseStatus" class="text-muted mt-2"></div>
+
 </div>
 
 
@@ -135,6 +147,29 @@ $stmt->execute();
     setInterval(fetchChat, 2000);
     fetchChat();
 </script>
+
+<script>
+    setInterval(async () => {
+        await fetch('../update_presence.php?session_id=<?php echo $session_id; ?>');
+    }, 30000);
+</script>
+
+<script>
+    document.getElementById('raiseHandBtn').addEventListener('click', async () => {
+        const res = await fetch('../raise_hand.php', {
+            method: 'POST',
+            body: new URLSearchParams({
+                session_id: <?php echo $session_id; ?>
+            }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+        const text = await res.text();
+        document.getElementById('raiseStatus').innerText = text;
+    });
+</script>
+
 
 </div>
 </body>
